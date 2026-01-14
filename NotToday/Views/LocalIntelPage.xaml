@@ -1,0 +1,308 @@
+﻿<Page
+    x:Class="NotToday.Views.LocalIntelPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:NotToday.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ic="clr-namespace:FluentIcons.Wpf;assembly=FluentIcons.Wpf"
+    xmlns:local="clr-namespace:NotToday.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodels="clr-namespace:NotToday.ViewModels"
+    Title="LocalIntelPage"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <Page.DataContext>
+        <viewmodels:LocalIntelViewModel />
+    </Page.DataContext>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <controls:CardControl>
+            <controls:CardControl.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock VerticalAlignment="Center" Text="角色列表" />
+                    <Button Grid.Column="1" Command="{Binding RefreshProcessListCommand}">
+                        <ic:FluentIcon Icon="ArrowSync" />
+                    </Button>
+                </Grid>
+            </controls:CardControl.Header>
+            <controls:CardControl.Content>
+                <ListBox ItemsSource="{Binding Processes, Mode=OneWay}" SelectedItem="{Binding SelectedProcess, Mode=TwoWay}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Border>
+                                <TextBlock Text="{Binding WindowTitle}" />
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </controls:CardControl.Content>
+            <controls:CardControl.Fonter>
+                <StackPanel
+                    Margin="0,0,0,8"
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal">
+                    <Button
+                        HorizontalAlignment="Center"
+                        Command="{Binding StartAllCommand}"
+                        Visibility="{Binding Running, Mode=OneWay, Converter={StaticResource TrueToCollapsedConverter}}">
+                        <ic:FluentIcon Icon="Play" />
+                    </Button>
+                    <Button
+                        HorizontalAlignment="Center"
+                        Command="{Binding StopAllCommand}"
+                        Foreground="Red"
+                        Visibility="{Binding Running, Mode=OneWay, Converter={StaticResource TrueToVisibleConverter}}">
+                        <ic:FluentIcon Icon="Stop" />
+                    </Button>
+                </StackPanel>
+            </controls:CardControl.Fonter>
+        </controls:CardControl>
+        <Grid Grid.Column="1" Visibility="{Binding SelectedProcess, Mode=OneWay, Converter={StaticResource NullToCollapsedConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="500" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <controls:CardControl>
+                <controls:CardControl.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock VerticalAlignment="Center" Text="角色监控配置" />
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <Button Command="{Binding DeleteIntelItemCommand}">
+                                <ic:FluentIcon Foreground="Red" Icon="Delete" />
+                            </Button>
+                            <Button Margin="8,0,0,0" Command="{Binding AddIntelItemCommand}">
+                                <ic:FluentIcon Icon="Add" />
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </controls:CardControl.Header>
+                <controls:CardControl.Content>
+                    <TabControl ItemsSource="{Binding LocalIntelItems, Mode=OneWay}" SelectedItem="{Binding SelectedLocalIntelItem, Mode=TwoWay}">
+                        <TabControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Margin="8,0" Text="{Binding Config.ConfigName, Mode=OneWay}" />
+                            </DataTemplate>
+                        </TabControl.ItemTemplate>
+                        <TabControl.ContentTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <Expander Margin="0,0,0,4" Header="监控区域">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock VerticalAlignment="Center" Text="X:" />
+                                                <TextBox
+                                                    Width="80"
+                                                    Margin="4,0,0,0"
+                                                    Text="{Binding Config.IntelRect.X, Mode=TwoWay}" />
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                <TextBlock VerticalAlignment="Center" Text="Y:" />
+                                                <TextBox
+                                                    Width="80"
+                                                    Margin="4,0,0,0"
+                                                    Text="{Binding Config.IntelRect.Y, Mode=TwoWay}" />
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                                <TextBlock VerticalAlignment="Center" Text="W:" />
+                                                <TextBox
+                                                    Width="80"
+                                                    Margin="4,0,0,0"
+                                                    Text="{Binding Config.IntelRect.Width, Mode=TwoWay}" />
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="3" Orientation="Horizontal">
+                                                <TextBlock VerticalAlignment="Center" Text="H:" />
+                                                <TextBox
+                                                    Width="80"
+                                                    Margin="4,0,0,0"
+                                                    Text="{Binding Config.IntelRect.Height, Mode=TwoWay}" />
+                                            </StackPanel>
+
+                                            <Button
+                                                Grid.Column="4"
+                                                Command="{Binding DataContext.SelectRegionCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                CommandParameter="{Binding}"
+                                                Content="选取" />
+                                        </Grid>
+                                    </Expander>
+                                    <Expander Margin="0,0,0,4" Header="通知方式">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <CheckBox Content="弹窗" IsChecked="{Binding Config.WindowNotify, Mode=TwoWay}" />
+                                            <CheckBox
+                                                Grid.Column="1"
+                                                Content="系统"
+                                                IsChecked="{Binding Config.ToastNotify, Mode=TwoWay}" />
+                                            <CheckBox
+                                                Grid.Column="2"
+                                                Content="声音"
+                                                IsChecked="{Binding Config.SoundNotify, Mode=TwoWay}" />
+                                        </Grid>
+                                    </Expander>
+                                    <Expander Margin="0,0,0,4" Header="声音播放">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Margin="8,0,0,0" Text="音量" />
+                                                <Slider
+                                                    Grid.Column="1"
+                                                    Margin="8,0"
+                                                    Maximum="100"
+                                                    Minimum="0"
+                                                    SmallChange="1"
+                                                    Value="{Binding Config.Volume, Mode=TwoWay}" />
+                                                <TextBlock Grid.Column="2" Text="{Binding Config.Volume, Mode=OneWay}" />
+                                            </Grid>
+                                            <CheckBox
+                                                Grid.Row="1"
+                                                Margin="0,8,0,0"
+                                                Content="循环播放"
+                                                IsChecked="{Binding Config.Loop, Mode=TwoWay}" />
+                                        </Grid>
+                                    </Expander>
+                                    <Expander Margin="0,0,0,4" Header="监控颜色">
+                                        <DataGrid
+                                            AutoGenerateColumns="False"
+                                            CanUserAddRows="False"
+                                            CellEditEnding="DataGrid_CellEditEnding"
+                                            ItemsSource="{Binding Config.Colors, Mode=OneWay}">
+                                            <DataGrid.Columns>
+                                                <DataGridTemplateColumn Header="名字">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <TextBox Width="80" Text="{Binding Name, Mode=TwoWay}" />
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                                <DataGridTemplateColumn Width="120" Header="颜色">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <Button
+                                                                Height="24"
+                                                                HorizontalAlignment="Stretch"
+                                                                Background="{Binding ColorBrush, Mode=OneWay}"
+                                                                Click="SelectColorButton_Click" />
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                    <DataGridTemplateColumn.CellEditingTemplate>
+                                                        <DataTemplate>
+                                                            <TextBox Loaded="ColorTextBox_Loaded" />
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellEditingTemplate>
+                                                </DataGridTemplateColumn>
+                                                <DataGridTemplateColumn Header="音频文件">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <TextBox Width="200" Text="{Binding SoundFile, Mode=TwoWay}" />
+                                                                <Button Click="PickSoundFileButton_Click" Content="+" />
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </Expander>
+                                    <Expander Margin="0,0,0,4" Header="其他">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="8" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock
+                                                    Width="140"
+                                                    VerticalAlignment="Center"
+                                                    Text="RGB识别阈值百分比" />
+                                                <TextBox Width="80" Text="{Binding Config.ColorMatchThreshold, Mode=TwoWay}" />
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                <TextBlock
+                                                    Width="140"
+                                                    VerticalAlignment="Center"
+                                                    Text="最小匹配像素个数" />
+                                                <TextBox Width="80" Text="{Binding Config.MinMatchPixel, Mode=TwoWay}" />
+                                            </StackPanel>
+                                            <StackPanel Grid.Row="2" Orientation="Horizontal">
+                                                <TextBlock
+                                                    Width="140"
+                                                    VerticalAlignment="Center"
+                                                    Text="延迟判断(ms)" />
+                                                <TextBox Width="80" Text="{Binding Config.Delay, Mode=TwoWay}" />
+                                            </StackPanel>
+                                            <StackPanel
+                                                Grid.Row="2"
+                                                Grid.Column="1"
+                                                Orientation="Horizontal">
+                                                <TextBlock
+                                                    Width="140"
+                                                    VerticalAlignment="Center"
+                                                    Text="当RGB减少时通知" />
+                                                <CheckBox Width="80" IsChecked="{Binding Config.NotifyDecrease, Mode=TwoWay}" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Expander>
+                                </StackPanel>
+                            </DataTemplate>
+                        </TabControl.ContentTemplate>
+                    </TabControl>
+                </controls:CardControl.Content>
+                <controls:CardControl.Fonter>
+                    <StackPanel
+                        Margin="0,0,0,8"
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal">
+                        <Button
+                            HorizontalAlignment="Center"
+                            Command="{Binding StartCommand}"
+                            Visibility="{Binding SelectedProcess.Running, Mode=OneWay, Converter={StaticResource TrueToCollapsedConverter}}">
+                            <ic:FluentIcon Icon="Play" />
+                        </Button>
+                        <Button
+                            HorizontalAlignment="Center"
+                            Command="{Binding StopCommand}"
+                            Foreground="Red"
+                            Visibility="{Binding SelectedProcess.Running, Mode=OneWay, Converter={StaticResource TrueToVisibleConverter}}">
+                            <ic:FluentIcon Icon="Stop" />
+                        </Button>
+                    </StackPanel>
+                </controls:CardControl.Fonter>
+            </controls:CardControl>
+        </Grid>
+    </Grid>
+</Page>
