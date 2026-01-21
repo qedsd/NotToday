@@ -16,6 +16,7 @@ using System.Windows;
 using System.Windows.Controls;
 using OpenCvSharp.Dnn;
 using NotToday.Services;
+using NotToday.Helpers;
 
 namespace NotToday.ViewModels
 {
@@ -74,6 +75,12 @@ namespace NotToday.ViewModels
             set => SetProperty(ref running, value);
         }
 
+        private System.Windows.Media.Imaging.WriteableBitmap _img;
+        public System.Windows.Media.Imaging.WriteableBitmap Img
+        {
+            get => _img;
+            set => SetProperty(ref _img, value);
+        }
 
         private readonly Dictionary<string, ObservableCollection<LocalIntelItem>> _runningDic = new Dictionary<string, ObservableCollection<LocalIntelItem>>();
         private static readonly string SettingFilePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Configs", "LocalIntelSetting.json");
@@ -232,6 +239,7 @@ namespace NotToday.ViewModels
         public ICommand StartCommand => new RelayCommand(async() =>
         {
             await Start(SelectedProcess);
+            Services.LocalIntelScreenshotService.Current.Start();
             Save();
         });
 
@@ -251,6 +259,7 @@ namespace NotToday.ViewModels
                 GetLocalIntelItems(p);
                 await Start(p);
             }
+            Services.LocalIntelScreenshotService.Current.Start();
             Save();
         });
 
@@ -261,14 +270,24 @@ namespace NotToday.ViewModels
                 Stop(p);
             }
         });
-
+        public ICommand SettingCommand => new RelayCommand(() =>
+        {
+            SettingWindow settingWindow = new SettingWindow(Setting);
+            if(settingWindow.ShowDialog() == true)
+            {
+                Save();
+            }
+        });
         private async Task<bool> Start(ProcessInfo processInfo)
         {
             try
             {
                 foreach (var item in processInfo.LocalIntelItems)
                 {
-                    await item.Start();
+                    if(await item.Start())
+                    {
+                        item.OnScreenshotChanged += Item_OnScreenshotChanged;
+                    }
                 }
                 _runningDic.Add(processInfo.GUID, processInfo.LocalIntelItems);
                 processInfo.Running = true;
@@ -279,6 +298,17 @@ namespace NotToday.ViewModels
             {
                 MessageBox.Show(ex.Message);
                 return false;
+            }
+        }
+
+        private void Item_OnScreenshotChanged(LocalIntelItem sender, Bitmap img)
+        {
+            if(SelectedLocalIntelItem == sender)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    Img = ImageHelper.ConvertBitmapToWriteableBitmapDirect(img);
+                });
             }
         }
 

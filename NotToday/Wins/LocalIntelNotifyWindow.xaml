@@ -10,6 +10,7 @@
     Width="400"
     Height="450"
     Topmost="True"
+    WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>

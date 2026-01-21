@@ -21,6 +21,7 @@
             <converters:BoolToVisibilityConverter x:Key="TrueToCollapsedConverter" IsReverse="True" />
             <converters:NullToVisibilityConverter x:Key="NullToVisibleConverter" NullToVisible="True" />
             <converters:NullToVisibilityConverter x:Key="NullToCollapsedConverter" NullToVisible="False" />
+            <converters:BoolReverseConverter x:Key="BoolReverseConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -49,7 +49,7 @@ namespace NotToday.Wins
             Loaded -= LocalIntelScreenshotWindow_Loaded;
             _windowHandle = WindowHelper.GetWindowHandle(this);
         }
-        public bool Add(LocalIntelItem localIntelItem)
+        public bool Add(LocalIntelItem localIntelItem, bool autoStart)
         {
             if (!_intelDics.ContainsKey(localIntelItem.GUID))
             {
@@ -89,7 +89,7 @@ namespace NotToday.Wins
                 }
                 finally
                 {
-                    if(_intelDics.Count > 0)
+                    if(autoStart && _intelDics.Count > 0)
                     {
                         Start();
                     }
@@ -146,58 +146,58 @@ namespace NotToday.Wins
         #region 定期截图
         private object Locker = new object();
         private bool _stopScreenshot = true;
+        private Task _runTask = null;
         public void Start()
         {
             lock (Locker)
             {
-                if (!_stopScreenshot)
-                {
-                    return;
-                }
                 _stopScreenshot = false;
             }
-            Task.Run(() =>
+            if(_intelDics.Count > 0 && _runTask == null)
             {
-                while (true)
+                _runTask = Task.Run(() =>
                 {
-                    lock (Locker)
+                    while (true)
                     {
-                        if (_stopScreenshot)
+                        bool stopScreenshot = false;
+                        lock (Locker)
                         {
-                            return;
+                            stopScreenshot = _stopScreenshot;
                         }
-                    }
 
-                    try
-                    {
-                        //System.Drawing.Point point = new System.Drawing.Point();
-                        //Win32.ClientToScreen(_windowHandle, ref point);
-                        System.Drawing.Rectangle windowRect = new System.Drawing.Rectangle();
-                        Win32.GetClientRect(_windowHandle, ref windowRect);
-                        //截取整个预警窗口图
-                        var img = Helpers.WindowCaptureHelper.GetScreenshot(windowRect.X, windowRect.Y, windowRect.Width, windowRect.Height);
-                        if (img != null)
+                        if (!stopScreenshot)
                         {
-                            //分割图像
-                            foreach (var item in _intelDics.Values)
+                            try
                             {
-                                var cutBitmap = ImageHelper.ImageToBitmap(img, new System.Drawing.Rectangle(item.ThumbRect.Left, item.ThumbRect.Top, item.ThumbRect.Right - item.ThumbRect.Left, item.ThumbRect.Bottom - item.ThumbRect.Top));
-                                item.LocalIntelItem.ChangeScreenshot(cutBitmap.Clone() as Bitmap);
-                                cutBitmap.Dispose();
+                                //System.Drawing.Point point = new System.Drawing.Point();
+                                //Win32.ClientToScreen(_windowHandle, ref point);
+                                System.Drawing.Rectangle windowRect = new System.Drawing.Rectangle();
+                                Win32.GetClientRect(_windowHandle, ref windowRect);
+                                System.Drawing.Point windowLeftTop = new System.Drawing.Point();
+                                Win32.ClientToScreen(_windowHandle, ref windowLeftTop);
+                                //截取整个预警窗口图
+                                var img = Helpers.WindowCaptureHelper.GetScreenshot(windowLeftTop.X, windowLeftTop.Y, windowRect.Width, windowRect.Height);
+                                if (img != null)
+                                {
+                                    //分割图像
+                                    foreach (var item in _intelDics.Values)
+                                    {
+                                        var cutBitmap = ImageHelper.ImageToBitmap(img, new System.Drawing.Rectangle(item.ThumbRect.Left, item.ThumbRect.Top, item.ThumbRect.Right - item.ThumbRect.Left, item.ThumbRect.Bottom - item.ThumbRect.Top));
+                                        item.LocalIntelItem.ChangeScreenshot(cutBitmap.Clone() as Bitmap);
+                                        cutBitmap.Dispose();
+                                    }
+                                    img.Dispose();
+                                }
                             }
-                            img.Dispose();
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show(ex.Message);
+                            }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message);
-                    }
-                    finally
-                    {
                         Thread.Sleep(_refreshSpan);
                     }
-                }
-            });
+                });
+            }
         }
         public void Stop()
         {

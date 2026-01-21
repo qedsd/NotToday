@@ -13,12 +13,17 @@ using NotToday.Services;
 
 namespace NotToday.Models
 {
-    public class LocalIntelItem
+    public class LocalIntelItem : ObservableObject
     {
         private System.Windows.Media.MediaPlayer _mediaPlayer;
         private LocalIntelItemConfig _config;
         private object _locker = new object();
         private bool _running = false;
+        public bool Running
+        {
+            get => _running;
+            set => SetProperty(ref _running, value);
+        }
         public LocalIntelItemConfig Config { get => _config; }
         public string GUID { get; private set; } = Guid.NewGuid().ToString();
         public LocalIntelItem(LocalIntelItemConfig config)
@@ -28,11 +33,11 @@ namespace NotToday.Models
 
         public async Task<bool> Start()
         {
-            if(await Services.LocalIntelScreenshotService.Current.Add(this))
+            if(await Services.LocalIntelScreenshotService.Current.Add(this, false))
             {
                 lock (_locker)
                 {
-                    _running = true;
+                    Running = true;
                 }
                 if (_config.SoundNotify)
                 {
@@ -58,7 +63,7 @@ namespace NotToday.Models
         {
             lock (_locker)
             {
-                _running = false;
+                Running = false;
             }
             Services.LocalIntelScreenshotService.Current.Remve(this);
             _mediaPlayer?.Stop();

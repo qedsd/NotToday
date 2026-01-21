@@ -1,0 +1,43 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
+using NotToday.Models;
+
+namespace NotToday.Wins
+{
+    public partial class SettingWindow : Wpf.Ui.Controls.FluentWindow
+    {
+        private LocalIntelSetting _setting;
+        public SettingWindow(LocalIntelSetting setting)
+        {
+            _setting = setting;
+            InitializeComponent();
+            ProcessNameTextBox.Text = setting.ProcessName;
+            RefreshSpanTextBox.Text = setting.RefreshSpan.ToString();
+        }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                _setting.ProcessName = ProcessNameTextBox.Text;
+                _setting.RefreshSpan = int.Parse(RefreshSpanTextBox.Text);
+                DialogResult = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+    }
+}

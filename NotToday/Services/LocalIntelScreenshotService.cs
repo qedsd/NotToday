@@ -22,7 +22,7 @@ namespace NotToday.Services
 
         private LocalIntelScreenshotWindow _window;
 
-        public async Task<bool> Add(LocalIntelItem localIntelItem)
+        public async Task<bool> Add(LocalIntelItem localIntelItem, bool autoStart)
         {
             if (_window == null)
             {
@@ -31,9 +31,12 @@ namespace NotToday.Services
             }
             _window.Show();
             await Task.Delay(500);
-            return _window.Add(localIntelItem);
+            return _window.Add(localIntelItem, autoStart);
         }
-
+        public void Start()
+        {
+            _window?.Start();
+        }
         private void Window_Closed(object sender, EventArgs e)
         {
             _window = null;
