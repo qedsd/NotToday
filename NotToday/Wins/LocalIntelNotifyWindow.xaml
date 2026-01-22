@@ -43,7 +43,7 @@
                                 <RowDefinition />
                             </Grid.RowDefinitions>
                             <TextBlock Text="{Binding Name}" />
-                            <TextBlock Grid.Row="1" Text="{Binding Time}" />
+                            <TextBlock Grid.Row="1" Text="{Binding Time, StringFormat=yyyy.MM.dd HH:mm:ss}" />
                         </Grid>
                         <Grid Grid.Column="1">
                             <Grid.RowDefinitions>
