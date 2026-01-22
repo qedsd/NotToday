@@ -33,7 +33,17 @@ namespace NotToday.Models
 
         public async Task<bool> Start()
         {
-            if(await Services.LocalIntelScreenshotService.Current.Add(this, false))
+            if (!Config.IntelRect.IsValid())
+            {
+                MessageBox.Show("请设置监控区域");
+                return false;
+            }
+            if (Config.Colors.Count == 0)
+            {
+                MessageBox.Show("请设置监控颜色");
+                return false;
+            }
+            if (await Services.LocalIntelScreenshotService.Current.Add(this, false))
             {
                 lock (_locker)
                 {

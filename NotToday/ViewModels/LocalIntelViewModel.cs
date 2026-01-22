@@ -68,6 +68,16 @@ namespace NotToday.ViewModels
             }
         }
 
+        private LocalIntelColor _selectedLocalIntelColor;
+        public LocalIntelColor SelectedLocalIntelColor
+        {
+            get => _selectedLocalIntelColor;
+            set
+            {
+                SetProperty(ref _selectedLocalIntelColor, value);
+            }
+        }
+
         private bool running;
         public bool Running
         {
@@ -247,10 +257,6 @@ namespace NotToday.ViewModels
         {
             Stop(SelectedProcess);
         });
-        public ICommand MuteCommand => new RelayCommand(() =>
-        {
-            
-        });
 
         public ICommand StartAllCommand => new RelayCommand(async() =>
         {
@@ -278,21 +284,45 @@ namespace NotToday.ViewModels
                 Save();
             }
         });
+        public ICommand AddColorCommand => new RelayCommand(() =>
+        {
+            SelectedLocalIntelItem.Config.Colors.Add(new LocalIntelColor()
+            {
+                Name = "自定义",
+                Color = System.Windows.Media.Color.FromRgb(111, 4, 4),
+            });
+        });
+        public ICommand DeleteColorCommand => new RelayCommand(() =>
+        {
+            if(SelectedLocalIntelColor != null)
+            {
+                SelectedLocalIntelItem.Config.Colors.Remove(SelectedLocalIntelColor);
+            }
+        });
         private async Task<bool> Start(ProcessInfo processInfo)
         {
             try
             {
+                bool running = false;
                 foreach (var item in processInfo.LocalIntelItems)
                 {
                     if(await item.Start())
                     {
+                        running = true;
                         item.OnScreenshotChanged += Item_OnScreenshotChanged;
                     }
                 }
-                _runningDic.Add(processInfo.GUID, processInfo.LocalIntelItems);
-                processInfo.Running = true;
-                Running = true;
-                return true;
+                if (running)
+                {
+                    _runningDic.Add(processInfo.GUID, processInfo.LocalIntelItems);
+                    processInfo.Running = true;
+                    Running = true;
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             catch (Exception ex)
             {
@@ -389,12 +419,5 @@ namespace NotToday.ViewModels
                 SelectedLocalIntelItem = LocalIntelItems.LastOrDefault();
             }
         });
-        public void RemoveColor(LocalIntelColor color)
-        {
-            if (color != null)
-            {
-                SelectedLocalIntelItem.Config.Colors.Remove(color);
-            }
-        }
     }
 }

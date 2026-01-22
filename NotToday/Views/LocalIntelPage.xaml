@@ -211,48 +211,67 @@
                                             Margin="0,0,0,4"
                                             Header="监控颜色"
                                             IsExpanded="True">
-                                            <DataGrid
-                                                AutoGenerateColumns="False"
-                                                CanUserAddRows="False"
-                                                CellEditEnding="DataGrid_CellEditEnding"
-                                                IsEnabled="{Binding Running, Mode=OneWay, Converter={StaticResource BoolReverseConverter}}"
-                                                ItemsSource="{Binding Config.Colors, Mode=OneWay}">
-                                                <DataGrid.Columns>
-                                                    <DataGridTemplateColumn Header="名字">
-                                                        <DataGridTemplateColumn.CellTemplate>
-                                                            <DataTemplate>
-                                                                <TextBox Width="80" Text="{Binding Name, Mode=TwoWay}" />
-                                                            </DataTemplate>
-                                                        </DataGridTemplateColumn.CellTemplate>
-                                                    </DataGridTemplateColumn>
-                                                    <DataGridTemplateColumn Width="120" Header="颜色">
-                                                        <DataGridTemplateColumn.CellTemplate>
-                                                            <DataTemplate>
-                                                                <Button
-                                                                    Height="24"
-                                                                    HorizontalAlignment="Stretch"
-                                                                    Background="{Binding ColorBrush, Mode=OneWay}"
-                                                                    Click="SelectColorButton_Click" />
-                                                            </DataTemplate>
-                                                        </DataGridTemplateColumn.CellTemplate>
-                                                        <DataGridTemplateColumn.CellEditingTemplate>
-                                                            <DataTemplate>
-                                                                <TextBox Loaded="ColorTextBox_Loaded" />
-                                                            </DataTemplate>
-                                                        </DataGridTemplateColumn.CellEditingTemplate>
-                                                    </DataGridTemplateColumn>
-                                                    <DataGridTemplateColumn Header="音频文件">
-                                                        <DataGridTemplateColumn.CellTemplate>
-                                                            <DataTemplate>
-                                                                <StackPanel Orientation="Horizontal">
-                                                                    <TextBox Width="200" Text="{Binding SoundFile, Mode=TwoWay}" />
-                                                                    <Button Click="PickSoundFileButton_Click" Content="+" />
-                                                                </StackPanel>
-                                                            </DataTemplate>
-                                                        </DataGridTemplateColumn.CellTemplate>
-                                                    </DataGridTemplateColumn>
-                                                </DataGrid.Columns>
-                                            </DataGrid>
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+                                                <DataGrid
+                                                    AutoGenerateColumns="False"
+                                                    CanUserAddRows="False"
+                                                    CellEditEnding="DataGrid_CellEditEnding"
+                                                    IsEnabled="{Binding Running, Mode=OneWay, Converter={StaticResource BoolReverseConverter}}"
+                                                    ItemsSource="{Binding Config.Colors, Mode=OneWay}"
+                                                    SelectedItem="{Binding DataContext.SelectedLocalIntelColor, RelativeSource={RelativeSource AncestorType=Page}, Mode=TwoWay}">
+                                                    <DataGrid.Columns>
+                                                        <DataGridTemplateColumn Header="名字">
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBox Width="80" Text="{Binding Name, Mode=TwoWay}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn Width="120" Header="颜色">
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <Button
+                                                                        Height="24"
+                                                                        HorizontalAlignment="Stretch"
+                                                                        Background="{Binding ColorBrush, Mode=OneWay}"
+                                                                        Click="SelectColorButton_Click" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                            <DataGridTemplateColumn.CellEditingTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBox Loaded="ColorTextBox_Loaded" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellEditingTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn Header="音频文件">
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <StackPanel Orientation="Horizontal">
+                                                                        <TextBox Width="200" Text="{Binding SoundFile, Mode=TwoWay}" />
+                                                                        <Button Click="PickSoundFileButton_Click" Content="+" />
+                                                                    </StackPanel>
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                    </DataGrid.Columns>
+                                                </DataGrid>
+                                                <StackPanel
+                                                    Grid.Row="1"
+                                                    HorizontalAlignment="Right"
+                                                    Orientation="Horizontal">
+                                                    <Button Command="{Binding DataContext.DeleteColorCommand, RelativeSource={RelativeSource AncestorType=Page}}">
+                                                        <ic:FluentIcon Foreground="Red" Icon="Delete" />
+                                                    </Button>
+                                                    <Button Margin="8,0,0,0" Command="{Binding DataContext.AddColorCommand, RelativeSource={RelativeSource AncestorType=Page}}">
+                                                        <ic:FluentIcon Icon="Add" />
+                                                    </Button>
+                                                </StackPanel>
+                                            </Grid>
+
                                         </Expander>
                                         <Expander
                                             Margin="0,0,0,4"

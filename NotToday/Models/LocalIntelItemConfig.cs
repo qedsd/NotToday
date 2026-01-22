@@ -178,5 +178,10 @@ namespace NotToday.Models
         {
             get => height; set => SetProperty(ref height, value);
         }
+
+        public bool IsValid()
+        {
+            return width > 0 && height > 0;
+        }
     }
 }
