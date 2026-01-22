@@ -38,8 +38,8 @@
                     CropShape="Rectangular"
                     CropperEnable="True"
                     DragImgEnable="True"
+                    MinCroppedPixelLength="1"
                     ThumbPlacement="All" />
-                <!--<Image x:Name="ScreenshotImage" />-->
             </Grid>
             <Border
                 x:Name="OperationArea"
