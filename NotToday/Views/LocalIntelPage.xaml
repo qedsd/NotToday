@@ -106,7 +106,10 @@
                             <DataTemplate>
                                 <ScrollViewer HorizontalScrollBarVisibility="Disabled">
                                     <StackPanel>
-                                        <Expander Margin="0,0,0,4" Header="监控区域">
+                                        <Expander
+                                            Margin="0,0,0,4"
+                                            Header="监控区域"
+                                            IsExpanded="True">
                                             <Grid IsEnabled="{Binding Running, Mode=OneWay, Converter={StaticResource BoolReverseConverter}}">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition />
@@ -151,7 +154,10 @@
                                                     Content="选取" />
                                             </Grid>
                                         </Expander>
-                                        <Expander Margin="0,0,0,4" Header="通知方式">
+                                        <Expander
+                                            Margin="0,0,0,4"
+                                            Header="通知方式"
+                                            IsExpanded="True">
                                             <Grid IsEnabled="{Binding Running, Mode=OneWay, Converter={StaticResource BoolReverseConverter}}">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition />
@@ -169,7 +175,10 @@
                                                     IsChecked="{Binding Config.SoundNotify, Mode=TwoWay}" />
                                             </Grid>
                                         </Expander>
-                                        <Expander Margin="0,0,0,4" Header="声音播放">
+                                        <Expander
+                                            Margin="0,0,0,4"
+                                            Header="声音播放"
+                                            IsExpanded="True">
                                             <Grid IsEnabled="{Binding Running, Mode=OneWay, Converter={StaticResource BoolReverseConverter}}">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="Auto" />
@@ -198,7 +207,10 @@
                                                     IsChecked="{Binding Config.Loop, Mode=TwoWay}" />
                                             </Grid>
                                         </Expander>
-                                        <Expander Margin="0,0,0,4" Header="监控颜色">
+                                        <Expander
+                                            Margin="0,0,0,4"
+                                            Header="监控颜色"
+                                            IsExpanded="True">
                                             <DataGrid
                                                 AutoGenerateColumns="False"
                                                 CanUserAddRows="False"
@@ -242,7 +254,10 @@
                                                 </DataGrid.Columns>
                                             </DataGrid>
                                         </Expander>
-                                        <Expander Margin="0,0,0,4" Header="其他">
+                                        <Expander
+                                            Margin="0,0,0,4"
+                                            Header="其他"
+                                            IsExpanded="True">
                                             <Grid IsEnabled="{Binding Running, Mode=OneWay, Converter={StaticResource BoolReverseConverter}}">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="Auto" />
