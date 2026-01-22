@@ -162,13 +162,13 @@
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition />
                                                     <ColumnDefinition />
-                                                    <ColumnDefinition />
                                                 </Grid.ColumnDefinitions>
                                                 <CheckBox Content="弹窗" IsChecked="{Binding Config.WindowNotify, Mode=TwoWay}" />
                                                 <CheckBox
                                                     Grid.Column="1"
                                                     Content="系统"
-                                                    IsChecked="{Binding Config.ToastNotify, Mode=TwoWay}" />
+                                                    IsChecked="{Binding Config.ToastNotify, Mode=TwoWay}"
+                                                    Visibility="Collapsed" />
                                                 <CheckBox
                                                     Grid.Column="2"
                                                     Content="声音"

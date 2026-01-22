@@ -52,7 +52,7 @@ namespace NotToday.Models
             set => SetProperty(ref windowNotify, value);
         }
 
-        private bool toastNotify = true;
+        private bool toastNotify = false;
         public bool ToastNotify
         {
             get => toastNotify;
