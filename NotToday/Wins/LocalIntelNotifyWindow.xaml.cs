@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NotToday.Models;
+using NotToday.Services;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -12,7 +14,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using NotToday.Models;
 using Wpf.Ui.Controls;
 
 namespace NotToday.Wins
@@ -30,6 +31,7 @@ namespace NotToday.Wins
 
         private void LocalIntelNotifyWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            LocalIntelNotifyService.Current.AfterHideWindow();
             e.Cancel = true;
             Hide();
         }

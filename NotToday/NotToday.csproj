@@ -35,4 +35,10 @@
     <PackageReference Include="WPF-UI" Version="4.2.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Resources\default.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

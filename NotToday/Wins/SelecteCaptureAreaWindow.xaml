@@ -39,6 +39,7 @@
                     CropperEnable="True"
                     DragImgEnable="True"
                     MinCroppedPixelLength="1"
+                    MinSelectedLength="1"
                     ThumbPlacement="All" />
             </Grid>
             <Border

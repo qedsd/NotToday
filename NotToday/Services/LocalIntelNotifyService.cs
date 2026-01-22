@@ -47,5 +47,11 @@ namespace NotToday.Services
         {
             _notifyWindow?.Hide();
         }
+        public void AfterHideWindow()
+        {
+            OnHideNotifyWindow.Invoke(this, EventArgs.Empty);
+        }
+
+        public event EventHandler OnHideNotifyWindow;
     }
 }

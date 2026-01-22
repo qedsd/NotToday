@@ -28,7 +28,7 @@ namespace NotToday.Helpers
         }
         public static void SetForegroundWindow(IntPtr targetHandle)
         {
-            Win32.keybd_event(0, 0, 0, 0);//SetForegroundWindow条件之一：The calling process received the last input event.
+            Win32.keybd_event(0, 0, 0, 0);
             if (Win32.IsIconic(targetHandle))
             {
                 Win32.ShowWindow(targetHandle, 4);
@@ -38,6 +38,7 @@ namespace NotToday.Helpers
                 Win32.ShowWindow(targetHandle, 5);
             }
             Win32.SetForegroundWindow(targetHandle);
+            Win32.keybd_event(0, 0, 0x0002, 0);
         }
     }
 }
