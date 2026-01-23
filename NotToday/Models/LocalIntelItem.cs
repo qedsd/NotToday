@@ -63,6 +63,7 @@ namespace NotToday.Models
                         _mediaPlayer.MediaEnded -= MediaPlayer_MediaEnded;
                     }
                 }
+                LocalIntelNotifyService.Current.OnHideNotifyWindow += OnHideNotifyWindow;
                 return true;
             }
             else
@@ -70,6 +71,12 @@ namespace NotToday.Models
                 return false;
             }
         }
+
+        private void OnHideNotifyWindow(object sender, EventArgs e)
+        {
+            _mediaPlayer?.Stop();
+        }
+
         public void Stop()
         {
             lock (_locker)

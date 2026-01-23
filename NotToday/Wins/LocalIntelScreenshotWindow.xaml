@@ -9,6 +9,7 @@
     Title="LocalIntelScreenshotWindow"
     Width="800"
     Height="450"
+    Background="Black"
     MouseLeftButtonDown="FluentWindow_MouseLeftButtonDown"
     MouseRightButtonDown="FluentWindow_MouseRightButtonDown"
     ResizeMode="NoResize"
