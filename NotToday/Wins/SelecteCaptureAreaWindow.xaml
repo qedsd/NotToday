@@ -50,8 +50,9 @@
                         Margin="8,0"
                         Click="UpdateScreenshot_Click"
                         Content="刷新截图" />
-                    <Button
+                    <ui:Button
                         Margin="8,0"
+                        Appearance="Primary"
                         Click="Confirm_Click"
                         Content="保存区域" />
                 </StackPanel>

@@ -7,6 +7,7 @@
     xmlns:ic="clr-namespace:FluentIcons.Wpf;assembly=FluentIcons.Wpf"
     xmlns:local="clr-namespace:NotToday.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:viewmodels="clr-namespace:NotToday.ViewModels"
     Title="LocalIntelPage"
     d:DesignHeight="450"
@@ -147,8 +148,9 @@
                                                         Text="{Binding Config.IntelRect.Height, Mode=TwoWay}" />
                                                 </StackPanel>
 
-                                                <Button
+                                                <ui:Button
                                                     Grid.Column="4"
+                                                    Appearance="Primary"
                                                     Command="{Binding DataContext.SelectRegionCommand, RelativeSource={RelativeSource AncestorType=Page}}"
                                                     CommandParameter="{Binding}"
                                                     Content="选取" />
@@ -213,10 +215,19 @@
                                             IsExpanded="True">
                                             <Grid>
                                                 <Grid.RowDefinitions>
-                                                    <RowDefinition />
                                                     <RowDefinition Height="Auto" />
+                                                    <RowDefinition />
                                                 </Grid.RowDefinitions>
+                                                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                                                    <Button Command="{Binding DataContext.DeleteColorCommand, RelativeSource={RelativeSource AncestorType=Page}}">
+                                                        <ic:FluentIcon Foreground="Red" Icon="Delete" />
+                                                    </Button>
+                                                    <Button Margin="8,0,0,0" Command="{Binding DataContext.AddColorCommand, RelativeSource={RelativeSource AncestorType=Page}}">
+                                                        <ic:FluentIcon Icon="Add" />
+                                                    </Button>
+                                                </StackPanel>
                                                 <DataGrid
+                                                    Grid.Row="1"
                                                     AutoGenerateColumns="False"
                                                     CanUserAddRows="False"
                                                     CellEditEnding="DataGrid_CellEditEnding"
@@ -259,19 +270,7 @@
                                                         </DataGridTemplateColumn>
                                                     </DataGrid.Columns>
                                                 </DataGrid>
-                                                <StackPanel
-                                                    Grid.Row="1"
-                                                    HorizontalAlignment="Right"
-                                                    Orientation="Horizontal">
-                                                    <Button Command="{Binding DataContext.DeleteColorCommand, RelativeSource={RelativeSource AncestorType=Page}}">
-                                                        <ic:FluentIcon Foreground="Red" Icon="Delete" />
-                                                    </Button>
-                                                    <Button Margin="8,0,0,0" Command="{Binding DataContext.AddColorCommand, RelativeSource={RelativeSource AncestorType=Page}}">
-                                                        <ic:FluentIcon Icon="Add" />
-                                                    </Button>
-                                                </StackPanel>
                                             </Grid>
-
                                         </Expander>
                                         <Expander
                                             Margin="0,0,0,4"
