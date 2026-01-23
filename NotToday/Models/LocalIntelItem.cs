@@ -45,6 +45,7 @@ namespace NotToday.Models
             }
             if (await Services.LocalIntelScreenshotService.Current.Add(this, false))
             {
+                _lastSums = new long[_config.Colors.Count];
                 lock (_locker)
                 {
                     Running = true;
@@ -92,7 +93,6 @@ namespace NotToday.Models
         private long[] _lastSums;
         private void Analyse(System.Drawing.Bitmap img)
         {
-            _lastSums ??= new long[_config.Colors.Count];
             var curSums = FindCurSums(img);
             List<int> actingStandingIndex = new List<int>();
             StringBuilder stringBuilder = new StringBuilder();
