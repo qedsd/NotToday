@@ -18,7 +18,7 @@ namespace NotToday
         {
             InitializeComponent();
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
-            TitleBar.Title = $"NotToday {version.Major}.{version.Minor} beta 1";
+            TitleBar.Title = $"NotToday {version.Major}.{version.Minor} beta 2";
         }
     }
 }
