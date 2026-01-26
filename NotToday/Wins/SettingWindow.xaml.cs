@@ -23,7 +23,6 @@ namespace NotToday.Wins
             _setting = setting;
             InitializeComponent();
             ProcessNameTextBox.Text = setting.ProcessName;
-            RefreshSpanTextBox.Text = setting.RefreshSpan.ToString();
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
@@ -31,7 +30,6 @@ namespace NotToday.Wins
             try
             {
                 _setting.ProcessName = ProcessNameTextBox.Text;
-                _setting.RefreshSpan = int.Parse(RefreshSpanTextBox.Text);
                 DialogResult = true;
             }
             catch (Exception ex)

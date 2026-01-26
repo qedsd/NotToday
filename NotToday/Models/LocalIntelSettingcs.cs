@@ -17,15 +17,7 @@ namespace NotToday.Models
         {
             get => processName; set => SetProperty(ref processName, value);
         }
-        private int refreshSpan = 100;
-        /// <summary>
-        /// 更新间隔
-        /// 单位毫秒
-        /// </summary>
-        public int RefreshSpan
-        {
-            get => refreshSpan; set => SetProperty(ref refreshSpan, value);
-        }
+        
         public List<LocalIntelItemConfig> ItemConfigs { get; set; } = new List<LocalIntelItemConfig>();
     }
 

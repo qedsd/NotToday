@@ -41,6 +41,19 @@ namespace NotToday.Models
             }
         }
 
+        private List<ColorMatch> _colorMatches;
+        /// <summary>
+        /// 每个颜色对应的匹配像素数量记录
+        /// </summary>
+        public List<ColorMatch> ColorMatches
+        {
+            get => _colorMatches;
+            set
+            {
+                SetProperty(ref _colorMatches, value);
+            }
+        }
+
         public LocalIntelItem(LocalIntelItemConfig config)
         {
             _config = config;
@@ -48,6 +61,7 @@ namespace NotToday.Models
         }
         private nint _sourceHwnd;
         private WindowCapture.RECT _targetRect;
+
         public bool Start()
         {
             if (!Config.IntelRect.IsValid())
@@ -74,13 +88,12 @@ namespace NotToday.Models
                 {
                     _timer = new System.Timers.Timer()
                     {
-                        Interval = _config.RefreshSpan,
                         AutoReset = false,
                     };
                     _timer.Elapsed += Timer_Elapsed;
                 }
-
-                _lastSums = new long[_config.Colors.Count];
+                _timer.Interval = _config.RefreshSpan;
+                ColorMatches = _config.Colors.Select(p=>new ColorMatch(p)).ToList();
                 lock (_locker)
                 {
                     Running = true;
@@ -147,30 +160,26 @@ namespace NotToday.Models
             _mediaPlayer.Play();
         }
 
-        /// <summary>
-        /// 每个颜色对应的匹配像素数量
-        /// </summary>
-        private long[] _lastSums;
         private void Analyse(System.Drawing.Bitmap img)
         {
-            var curSums = FindCurSums(img);
-            List<int> actingStandingIndex = new List<int>();
+            FindCurSums(img);
+            List<ColorMatch> actingColorMatch = new List<ColorMatch>();
             StringBuilder stringBuilder = new StringBuilder();
             bool isDecreas = false;
-            for (int i = 0; i < _lastSums.Length; i++)
+            foreach(var colorMatch in _colorMatches)
             {
-                long diff = curSums[i] - _lastSums[i];
+                long diff = colorMatch.Diff;
                 if (Math.Abs(diff) >= _config.MinMatchPixel)
                 {
                     if (diff > 0)
                     {
                         stringBuilder.Append($"[{_config.ConfigName}] ");
                         isDecreas = false;
-                        stringBuilder.Append(_config.Colors[i].Name);
+                        stringBuilder.Append(colorMatch.Color.Name);
                         stringBuilder.Append("++");
                         stringBuilder.Append($"({diff})");
                         stringBuilder.Append("  ");
-                        actingStandingIndex.Add(i);
+                        actingColorMatch.Add(colorMatch);
                     }
                     else
                     {
@@ -178,16 +187,15 @@ namespace NotToday.Models
                         if (_config.DecreaseMode == LocalInteColorDecreaseMode.Notify)
                         {
                             stringBuilder.Append($"[{_config.ConfigName}] ");
-                            stringBuilder.Append(_config.Colors[i].Name);
+                            stringBuilder.Append(colorMatch.Color.Name);
                             stringBuilder.Append("--");
                             stringBuilder.Append($"({diff})");
                             stringBuilder.Append("  ");
-                            actingStandingIndex.Add(i);
+                            actingColorMatch.Add(colorMatch);
                         }
                     }
                 }
             }
-            _lastSums = curSums;
             if (stringBuilder.Length != 0)
             {
                 if (_config.WindowNotify)
@@ -201,7 +209,7 @@ namespace NotToday.Models
                         try
                         {
                             //使用第一个声望对应的音频文件
-                            var setting = _config.Colors[actingStandingIndex[0]];
+                            var setting = actingColorMatch[0].Color;
                             string filePath = string.IsNullOrEmpty(setting.SoundFile) ? System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "Resources", "default.mp3") : setting.SoundFile;
                             _mediaPlayer.Stop();
                             _mediaPlayer.Open(new Uri(filePath, UriKind.RelativeOrAbsolute));
@@ -222,20 +230,17 @@ namespace NotToday.Models
                 });
             }
         }
-        private long[] FindCurSums(System.Drawing.Bitmap img)
+        private void FindCurSums(System.Drawing.Bitmap img)
         {
-            long[] curSums = new long[_config.Colors.Count];
             var sourceMat = IntelImageHelper.BitmapToMat(img);
-            for (int i = 0; i < _config.Colors.Count; i++)
+            foreach (var colorMatch in _colorMatches)
             {
-                var setting = _config.Colors[i];
+                var setting = colorMatch.Color;
+                //使用每个点xy总和来记录，可能存在小概率误报
                 var points = IntelImageHelper.GetMatchPoint(sourceMat, setting.Color.R, setting.Color.G, setting.Color.B, _config.ColorMatchThreshold);
-                long sum = 0;//使用每个点xy总和来记录，可能存在小概率误报
-                sum += points.Count;
-                curSums[i] = sum;
+                colorMatch.SetNewSum(points.Count);
             }
             sourceMat.Dispose();
-            return curSums;
         }
         public void ChangeScreenshot(Bitmap img)
         {
@@ -251,6 +256,7 @@ namespace NotToday.Models
                 img.Dispose();
             }
         }
+
         public delegate void ScreenshotChangedDelegate(LocalIntelItem sender, Bitmap img);
         public event ScreenshotChangedDelegate OnScreenshotChanged;
     }

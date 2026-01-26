@@ -20,7 +20,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="300" />
             <ColumnDefinition />
-            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="240" />
         </Grid.ColumnDefinitions>
         <controls:CardControl>
             <controls:CardControl.Header>
@@ -182,31 +182,34 @@
                                             Header="声音播放"
                                             IsExpanded="True">
                                             <Grid IsEnabled="{Binding Running, Mode=OneWay, Converter={StaticResource BoolReverseConverter}}">
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="Auto" />
-                                                    <RowDefinition Height="Auto" />
-                                                </Grid.RowDefinitions>
-                                                <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+                                                <Grid Grid.Column="1">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="Auto" />
                                                         <ColumnDefinition />
                                                         <ColumnDefinition Width="Auto" />
                                                     </Grid.ColumnDefinitions>
-                                                    <TextBlock Margin="8,0,0,0" Text="音量" />
+                                                    <TextBlock
+                                                        Margin="8,0,0,0"
+                                                        VerticalAlignment="Center"
+                                                        Text="音量" />
                                                     <Slider
                                                         Grid.Column="1"
                                                         Margin="8,0"
+                                                        VerticalAlignment="Center"
                                                         Maximum="100"
                                                         Minimum="0"
                                                         SmallChange="1"
                                                         Value="{Binding Config.Volume, Mode=TwoWay}" />
-                                                    <TextBlock Grid.Column="2" Text="{Binding Config.Volume, Mode=OneWay}" />
+                                                    <TextBlock
+                                                        Grid.Column="2"
+                                                        VerticalAlignment="Center"
+                                                        Text="{Binding Config.Volume, Mode=OneWay}" />
                                                 </Grid>
-                                                <CheckBox
-                                                    Grid.Row="1"
-                                                    Margin="0,8,0,0"
-                                                    Content="循环播放"
-                                                    IsChecked="{Binding Config.Loop, Mode=TwoWay}" />
+                                                <CheckBox Content="循环播放" IsChecked="{Binding Config.Loop, Mode=TwoWay}" />
                                             </Grid>
                                         </Expander>
                                         <Expander
@@ -281,6 +284,8 @@
                                                     <RowDefinition Height="Auto" />
                                                     <RowDefinition Height="8" />
                                                     <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="8" />
+                                                    <RowDefinition Height="Auto" />
                                                 </Grid.RowDefinitions>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition />
@@ -321,6 +326,13 @@
                                                         <ComboBoxItem>停止通知</ComboBoxItem>
                                                     </ComboBox>
                                                 </StackPanel>
+                                                <StackPanel Grid.Row="4" Orientation="Horizontal">
+                                                    <TextBlock
+                                                        Width="130"
+                                                        VerticalAlignment="Center"
+                                                        Text="刷新间隔(ms)" />
+                                                    <TextBox Width="100" Text="{Binding Config.RefreshSpan, Mode=TwoWay}" />
+                                                </StackPanel>
                                             </Grid>
                                         </Expander>
                                     </StackPanel>
@@ -356,7 +368,27 @@
                 <TextBlock VerticalAlignment="Center" Text="监控区域预览" />
             </controls:CardControl.Header>
             <controls:CardControl.Content>
-                <Image Margin="8" Source="{Binding Img, Mode=OneWay}" />
+                <Grid Margin="8,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Image Source="{Binding Img, Mode=OneWay}" />
+                    <DataGrid
+                        Grid.Row="1"
+                        Margin="0,8,0,0"
+                        AutoGenerateColumns="False"
+                        CanUserAddRows="False"
+                        IsReadOnly="True"
+                        ItemsSource="{Binding SelectedLocalIntelItem.ColorMatches, Mode=OneWay}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Color.Name}" Header="名字" />
+                            <DataGridTextColumn Binding="{Binding NewSum}" Header="当前" />
+                            <DataGridTextColumn Binding="{Binding LastSum}" Header="上一次" />
+                            <DataGridTextColumn Binding="{Binding Diff}" Header="差" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
             </controls:CardControl.Content>
         </controls:CardControl>
     </Grid>

@@ -44,20 +44,6 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock VerticalAlignment="Center" Text="进程名称" />
                 <TextBox x:Name="ProcessNameTextBox" Grid.Column="1" />
-                <TextBlock
-                    Grid.Row="2"
-                    VerticalAlignment="Center"
-                    Text="截图间隔" />
-                <TextBox
-                    x:Name="RefreshSpanTextBox"
-                    Grid.Row="2"
-                    Grid.Column="1" />
-                <TextBlock
-                    Grid.Row="2"
-                    Grid.Column="2"
-                    Margin="8,0,0,0"
-                    VerticalAlignment="Center"
-                    Text="ms" />
             </Grid>
             <StackPanel
                 Grid.Row="1"
