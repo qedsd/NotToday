@@ -26,9 +26,24 @@ namespace NotToday.Models
         }
         public LocalIntelItemConfig Config { get => _config; }
         public string GUID { get; private set; } = Guid.NewGuid().ToString();
+
+        private int decreaseMode;
+        public int DecreaseMode
+        {
+            get => decreaseMode;
+            set
+            {
+                if(SetProperty(ref decreaseMode, value))
+                {
+                    Config.DecreaseMode = (LocalInteColorDecreaseMode)value;
+                }
+            }
+        }
+
         public LocalIntelItem(LocalIntelItemConfig config)
         {
             _config = config;
+            DecreaseMode = (int)config.DecreaseMode;
         }
 
         public async Task<bool> Start()
@@ -103,27 +118,34 @@ namespace NotToday.Models
             var curSums = FindCurSums(img);
             List<int> actingStandingIndex = new List<int>();
             StringBuilder stringBuilder = new StringBuilder();
+            bool isDecreas = false;
             for (int i = 0; i < _lastSums.Length; i++)
             {
                 long diff = curSums[i] - _lastSums[i];
                 if (Math.Abs(diff) >= _config.MinMatchPixel)
                 {
-                    stringBuilder.Append($"[{_config.ConfigName}] ");
                     if (diff > 0)
                     {
+                        stringBuilder.Append($"[{_config.ConfigName}] ");
+                        isDecreas = false;
                         stringBuilder.Append(_config.Colors[i].Name);
                         stringBuilder.Append("++");
                         stringBuilder.Append($"({diff})");
                         stringBuilder.Append("  ");
                         actingStandingIndex.Add(i);
                     }
-                    else if (_config.NotifyDecrease)
+                    else
                     {
-                        stringBuilder.Append(_config.Colors[i].Name);
-                        stringBuilder.Append("--");
-                        stringBuilder.Append($"({diff})");
-                        stringBuilder.Append("  ");
-                        actingStandingIndex.Add(i);
+                        isDecreas = isDecreas || true;
+                        if (_config.DecreaseMode == LocalInteColorDecreaseMode.Notify)
+                        {
+                            stringBuilder.Append($"[{_config.ConfigName}] ");
+                            stringBuilder.Append(_config.Colors[i].Name);
+                            stringBuilder.Append("--");
+                            stringBuilder.Append($"({diff})");
+                            stringBuilder.Append("  ");
+                            actingStandingIndex.Add(i);
+                        }
                     }
                 }
             }
@@ -153,6 +175,13 @@ namespace NotToday.Models
                         }
                     });
                 }
+            }
+            else if(isDecreas && _config.DecreaseMode == LocalInteColorDecreaseMode.StopNotify && _config.SoundNotify)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    _mediaPlayer?.Stop();
+                });
             }
         }
         private long[] FindCurSums(System.Drawing.Bitmap img)

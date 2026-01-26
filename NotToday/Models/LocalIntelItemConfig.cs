@@ -96,6 +96,13 @@ namespace NotToday.Models
             set => SetProperty(ref notifyDecrease, value);
         }
 
+        private LocalInteColorDecreaseMode decreaseMode;
+        public LocalInteColorDecreaseMode DecreaseMode
+        {
+            get => decreaseMode;
+            set => SetProperty(ref decreaseMode, value);
+        }
+
         private bool loop = true;
         public bool Loop
         {
@@ -183,5 +190,12 @@ namespace NotToday.Models
         {
             return width > 0 && height > 0;
         }
+    }
+
+    public enum LocalInteColorDecreaseMode
+    {
+        None,
+        Notify,
+        StopNotify
     }
 }
