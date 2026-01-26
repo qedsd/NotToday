@@ -246,9 +246,9 @@ namespace NotToday.ViewModels
             };
         }
 
-        public ICommand StartCommand => new RelayCommand(async() =>
+        public ICommand StartCommand => new RelayCommand(() =>
         {
-            await Start(SelectedProcess);
+            Start(SelectedProcess);
             Services.LocalIntelScreenshotService.Current.Start();
             Save();
         });
@@ -258,12 +258,12 @@ namespace NotToday.ViewModels
             Stop(SelectedProcess);
         });
 
-        public ICommand StartAllCommand => new RelayCommand(async() =>
+        public ICommand StartAllCommand => new RelayCommand(() =>
         {
             foreach (var p in Processes.Where(p => !p.Running))
             {
                 GetLocalIntelItems(p);
-                await Start(p);
+                Start(p);
             }
             Services.LocalIntelScreenshotService.Current.Start();
             Save();
@@ -299,14 +299,14 @@ namespace NotToday.ViewModels
                 SelectedLocalIntelItem.Config.Colors.Remove(SelectedLocalIntelColor);
             }
         });
-        private async Task<bool> Start(ProcessInfo processInfo)
+        private bool Start(ProcessInfo processInfo)
         {
             try
             {
                 bool running = false;
                 foreach (var item in processInfo.LocalIntelItems)
                 {
-                    if(await item.Start())
+                    if(item.Start())
                     {
                         running = true;
                         item.OnScreenshotChanged += Item_OnScreenshotChanged;

@@ -123,6 +123,17 @@ namespace NotToday.Models
             get => delay;
             set => SetProperty(ref delay, value);
         }
+
+        private int refreshSpan = 100;
+        /// <summary>
+        /// 更新间隔
+        /// 单位毫秒
+        /// </summary>
+        public int RefreshSpan
+        {
+            get => refreshSpan; set => SetProperty(ref refreshSpan, value);
+        }
+
         public ObservableCollection<LocalIntelColor> Colors { get; set; } = new ObservableCollection<LocalIntelColor>();
     }
     public class LocalIntelColor : ObservableObject

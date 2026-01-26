@@ -19,6 +19,7 @@ namespace NotToday.Models
         private LocalIntelItemConfig _config;
         private object _locker = new object();
         private bool _running = false;
+        private System.Timers.Timer _timer;
         public bool Running
         {
             get => _running;
@@ -45,21 +46,40 @@ namespace NotToday.Models
             _config = config;
             DecreaseMode = (int)config.DecreaseMode;
         }
-
-        public async Task<bool> Start()
+        private nint _sourceHwnd;
+        private WindowCapture.RECT _targetRect;
+        public bool Start()
         {
             if (!Config.IntelRect.IsValid())
             {
-                MessageBox.Show("请设置监控区域");
+                MessageBox.Show($"{Config.WindowTitle} {Config.ConfigName}: 请设置监控区域");
                 return false;
             }
             if (Config.Colors.Count == 0)
             {
-                MessageBox.Show("请设置监控颜色");
+                MessageBox.Show($"{Config.WindowTitle} {Config.ConfigName}: 请设置监控颜色");
                 return false;
             }
-            if (await Services.LocalIntelScreenshotService.Current.Add(this, false))
+            try
             {
+                _sourceHwnd = _config.HWnd;
+                _targetRect = new WindowCapture.RECT()
+                {
+                    Left = _config.IntelRect.X,
+                    Right = _config.IntelRect.X + _config.IntelRect.Width,
+                    Top = _config.IntelRect.Y,
+                    Bottom = _config.IntelRect.Y + _config.IntelRect.Height,
+                };
+                if (_timer == null)
+                {
+                    _timer = new System.Timers.Timer()
+                    {
+                        Interval = _config.RefreshSpan,
+                        AutoReset = false,
+                    };
+                    _timer.Elapsed += Timer_Elapsed;
+                }
+
                 _lastSums = new long[_config.Colors.Count];
                 lock (_locker)
                 {
@@ -79,11 +99,29 @@ namespace NotToday.Models
                     }
                 }
                 LocalIntelNotifyService.Current.OnHideNotifyWindow += OnHideNotifyWindow;
+                _timer.Start();
                 return true;
             }
-            else
+            catch (Exception ex)
             {
+                _timer?.Stop();
+                MessageBox.Show($"{Config.WindowTitle} {Config.ConfigName}: {ex.ToString()}");
                 return false;
+            }
+        }
+
+        private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            try
+            {
+                var img = WindowCapture.CaptureWindowClientAreaRectangle(_sourceHwnd, _targetRect);
+                ChangeScreenshot(Helpers.ImageHelper.ImageToBitmap(img));
+                img.Dispose();
+                _timer.Start();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
             }
         }
 
@@ -98,7 +136,7 @@ namespace NotToday.Models
             {
                 Running = false;
             }
-            Services.LocalIntelScreenshotService.Current.Remve(this);
+            _timer?.Stop();
             _mediaPlayer?.Stop();
         }
 
