@@ -124,7 +124,7 @@ namespace NotToday.Models
             set => SetProperty(ref delay, value);
         }
 
-        private int refreshSpan = 100;
+        private int refreshSpan = 500;
         /// <summary>
         /// 更新间隔
         /// 单位毫秒
