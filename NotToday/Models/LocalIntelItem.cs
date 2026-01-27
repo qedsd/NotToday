@@ -130,7 +130,13 @@ namespace NotToday.Models
                 var img = WindowCapture2.CaptureWindowClientArea(_sourceHwnd, _targetRect);
                 ChangeScreenshot(Helpers.ImageHelper.ImageToBitmap(img));
                 img.Dispose();
-                _timer.Start();
+                lock (_locker)
+                {
+                    if (Running)
+                    {
+                        _timer.Start();
+                    }
+                }
             }
             catch (Exception ex)
             {
