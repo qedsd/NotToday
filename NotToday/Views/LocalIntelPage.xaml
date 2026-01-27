@@ -39,9 +39,21 @@
                 <ListBox ItemsSource="{Binding Processes, Mode=OneWay}" SelectedItem="{Binding SelectedProcess, Mode=TwoWay}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <Border>
-                                <TextBlock Text="{Binding WindowTitle}" />
-                            </Border>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="12" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Rectangle
+                                    Width="3"
+                                    Height="14"
+                                    HorizontalAlignment="Left"
+                                    Fill="{StaticResource SystemAccentBrush}"
+                                    RadiusX="2"
+                                    RadiusY="2"
+                                    Visibility="{Binding Running, Mode=OneWay, Converter={StaticResource TrueToVisibleConverter}}" />
+                                <TextBlock Grid.Column="1" Text="{Binding WindowTitle}" />
+                            </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
