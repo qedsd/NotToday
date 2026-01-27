@@ -216,7 +216,7 @@
                                             Margin="0,0,0,4"
                                             Header="监控颜色"
                                             IsExpanded="True">
-                                            <Grid>
+                                            <Grid IsEnabled="{Binding Running, Mode=OneWay, Converter={StaticResource BoolReverseConverter}}">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="Auto" />
                                                     <RowDefinition />
@@ -234,7 +234,6 @@
                                                     AutoGenerateColumns="False"
                                                     CanUserAddRows="False"
                                                     CellEditEnding="DataGrid_CellEditEnding"
-                                                    IsEnabled="{Binding Running, Mode=OneWay, Converter={StaticResource BoolReverseConverter}}"
                                                     ItemsSource="{Binding Config.Colors, Mode=OneWay}"
                                                     SelectedItem="{Binding DataContext.SelectedLocalIntelColor, RelativeSource={RelativeSource AncestorType=Page}, Mode=TwoWay}">
                                                     <DataGrid.Columns>
@@ -314,50 +313,53 @@
                                                 </Grid.RowDefinitions>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition />
+                                                    <ColumnDefinition Width="8" />
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition Width="8" />
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition Width="8" />
                                                     <ColumnDefinition />
                                                 </Grid.ColumnDefinitions>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock
-                                                        Width="130"
-                                                        VerticalAlignment="Center"
-                                                        Text="颜色匹配阈值百分比" />
-                                                    <TextBox Width="100" Text="{Binding Config.ColorMatchThreshold, Mode=TwoWay}" />
-                                                </StackPanel>
-                                                <StackPanel Grid.Column="1" Orientation="Horizontal">
-                                                    <TextBlock
-                                                        Width="130"
-                                                        VerticalAlignment="Center"
-                                                        Text="最小匹配像素个数" />
-                                                    <TextBox Width="100" Text="{Binding Config.MinMatchPixel, Mode=TwoWay}" />
-                                                </StackPanel>
-                                                <StackPanel Grid.Row="2" Orientation="Horizontal">
-                                                    <TextBlock
-                                                        Width="130"
-                                                        VerticalAlignment="Center"
-                                                        Text="延迟判断(ms)" />
-                                                    <TextBox Width="100" Text="{Binding Config.Delay, Mode=TwoWay}" />
-                                                </StackPanel>
-                                                <StackPanel
+                                                <TextBlock VerticalAlignment="Center" Text="颜色匹配阈值百分比" />
+                                                <TextBox Grid.Column="2" Text="{Binding Config.ColorMatchThreshold, Mode=TwoWay}" />
+
+                                                <TextBlock
+                                                    Grid.Column="4"
+                                                    VerticalAlignment="Center"
+                                                    Text="最小匹配像素个数" />
+                                                <TextBox Grid.Column="6" Text="{Binding Config.MinMatchPixel, Mode=TwoWay}" />
+
+                                                <TextBlock
                                                     Grid.Row="2"
-                                                    Grid.Column="1"
-                                                    Orientation="Horizontal">
-                                                    <TextBlock
-                                                        Width="130"
-                                                        VerticalAlignment="Center"
-                                                        Text="当颜色减少时" />
-                                                    <ComboBox Width="100" SelectedIndex="{Binding DecreaseMode, Mode=TwoWay}">
-                                                        <ComboBoxItem>无处理</ComboBoxItem>
-                                                        <ComboBoxItem>通知</ComboBoxItem>
-                                                        <ComboBoxItem>停止通知</ComboBoxItem>
-                                                    </ComboBox>
-                                                </StackPanel>
-                                                <StackPanel Grid.Row="4" Orientation="Horizontal">
-                                                    <TextBlock
-                                                        Width="130"
-                                                        VerticalAlignment="Center"
-                                                        Text="刷新间隔(ms)" />
-                                                    <TextBox Width="100" Text="{Binding Config.RefreshSpan, Mode=TwoWay}" />
-                                                </StackPanel>
+                                                    VerticalAlignment="Center"
+                                                    Text="延迟判断(ms)" />
+                                                <TextBox
+                                                    Grid.Row="2"
+                                                    Grid.Column="2"
+                                                    Text="{Binding Config.Delay, Mode=TwoWay}" />
+
+                                                <TextBlock
+                                                    Grid.Row="2"
+                                                    Grid.Column="4"
+                                                    VerticalAlignment="Center"
+                                                    Text="当颜色减少时" />
+                                                <ComboBox
+                                                    Grid.Row="2"
+                                                    Grid.Column="6"
+                                                    SelectedIndex="{Binding DecreaseMode, Mode=TwoWay}">
+                                                    <ComboBoxItem>无处理</ComboBoxItem>
+                                                    <ComboBoxItem>通知</ComboBoxItem>
+                                                    <ComboBoxItem>停止通知</ComboBoxItem>
+                                                </ComboBox>
+
+                                                <TextBlock
+                                                    Grid.Row="4"
+                                                    VerticalAlignment="Center"
+                                                    Text="刷新间隔(ms)" />
+                                                <TextBox
+                                                    Grid.Row="4"
+                                                    Grid.Column="2"
+                                                    Text="{Binding Config.RefreshSpan, Mode=TwoWay}" />
                                             </Grid>
                                         </Expander>
                                     </StackPanel>

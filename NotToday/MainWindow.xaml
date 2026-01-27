@@ -9,7 +9,7 @@
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:views="clr-namespace:NotToday.Views"
     Title="NotToday"
-    Width="1050"
+    Width="1100"
     Height="700"
     ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
     ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
