@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <None Remove="Assets\logo.ico" />
+    <None Remove="Assets\qq.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,6 +34,18 @@
     <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.11.0.20250507" />
     <PackageReference Include="System.Drawing.Common" Version="10.0.1" />
     <PackageReference Include="WPF-UI" Version="4.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\qq.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Wins\AboutWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>

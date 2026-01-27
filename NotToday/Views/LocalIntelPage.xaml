@@ -83,6 +83,12 @@
                         Visibility="{Binding Running, Mode=OneWay, Converter={StaticResource TrueToCollapsedConverter}}">
                         <ic:FluentIcon Icon="Settings" />
                     </Button>
+                    <Button
+                        Margin="8,0,0,0"
+                        HorizontalAlignment="Center"
+                        Command="{Binding AboutCommand}">
+                        <ic:FluentIcon Icon="Info" />
+                    </Button>
                 </StackPanel>
             </controls:CardControl.Fonter>
         </controls:CardControl>

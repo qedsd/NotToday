@@ -282,6 +282,11 @@ namespace NotToday.ViewModels
                 Save();
             }
         });
+        public ICommand AboutCommand => new RelayCommand(() =>
+        {
+            AboutWindow window = new AboutWindow();
+            window.ShowDialog();
+        });
         public ICommand AddColorCommand => new RelayCommand(() =>
         {
             SelectedLocalIntelItem.Config.Colors.Add(new LocalIntelColor()
