@@ -332,11 +332,11 @@
                                                 <TextBlock
                                                     Grid.Row="2"
                                                     VerticalAlignment="Center"
-                                                    Text="延迟判断(ms)" />
+                                                    Text="刷新间隔(ms)" />
                                                 <TextBox
                                                     Grid.Row="2"
                                                     Grid.Column="2"
-                                                    Text="{Binding Config.Delay, Mode=TwoWay}" />
+                                                    Text="{Binding Config.RefreshSpan, Mode=TwoWay}" />
 
                                                 <TextBlock
                                                     Grid.Row="2"
@@ -351,15 +351,6 @@
                                                     <ComboBoxItem>通知</ComboBoxItem>
                                                     <ComboBoxItem>停止通知</ComboBoxItem>
                                                 </ComboBox>
-
-                                                <TextBlock
-                                                    Grid.Row="4"
-                                                    VerticalAlignment="Center"
-                                                    Text="刷新间隔(ms)" />
-                                                <TextBox
-                                                    Grid.Row="4"
-                                                    Grid.Column="2"
-                                                    Text="{Binding Config.RefreshSpan, Mode=TwoWay}" />
                                             </Grid>
                                         </Expander>
                                     </StackPanel>
