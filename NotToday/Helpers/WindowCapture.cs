@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
-
 namespace NotToday.Helpers
 {
     public class WindowCapture
@@ -65,16 +64,15 @@ namespace NotToday.Helpers
         /// </summary>
         public static Image CaptureScreen()
         {
-            return CaptureWindow(GetDesktopWindow());
+            return CaptureFullWindow(GetDesktopWindow());
         }
 
         /// <summary>
         /// 捕获指定窗口
         /// </summary>
         /// <param name="handle">窗口句柄</param>
-        /// <param name="usePrintWindow">是否使用PrintWindow（支持DirectX/OpenGL窗口）</param>
         /// <returns>捕获的图像</returns>
-        public static Image CaptureWindow(IntPtr handle, bool usePrintWindow = false)
+        public static Bitmap CaptureFullWindow(IntPtr handle)
         {
             if (handle == IntPtr.Zero)
                 throw new ArgumentException("无效的窗口句柄");
@@ -104,23 +102,7 @@ namespace NotToday.Helpers
                 hBitmap = CreateCompatibleBitmap(hdcSrc, width, height);
                 hOldBitmap = SelectObject(hdcDest, hBitmap);
 
-                // 执行捕获
-                if (usePrintWindow)
-                {
-                    // 使用PrintWindow（支持更多类型的窗口）
-                    bool success = PrintWindow(handle, hdcDest, PW_RENDERFULLCONTENT);
-
-                    // 如果PrintWindow失败，回退到BitBlt
-                    if (!success)
-                    {
-                        BitBlt(hdcDest, 0, 0, width, height, hdcSrc, 0, 0, SRCCOPY);
-                    }
-                }
-                else
-                {
-                    // 使用BitBlt
-                    BitBlt(hdcDest, 0, 0, width, height, hdcSrc, 0, 0, SRCCOPY);
-                }
+                PrintWindow(handle, hdcDest, PW_RENDERFULLCONTENT);
 
                 // 将HBITMAP转换为System.Drawing.Image
                 return Image.FromHbitmap(hBitmap);
@@ -167,7 +149,8 @@ namespace NotToday.Helpers
             clientRect.Right = clientRect.Left + width;
             clientRect.Bottom = clientRect.Top + height;
 
-            return CaptureRectangle(handle, clientRect);
+            var fullWindow = CaptureFullWindow(handle);
+            return CropRegion(fullWindow, clientRect);
         }
 
         /// <summary>
@@ -176,7 +159,7 @@ namespace NotToday.Helpers
         /// <param name="handle"></param>
         /// <param name="rect">相对于客户区域的位置</param>
         /// <returns></returns>
-        public static Image CaptureWindowClientAreaRectangle(IntPtr handle, RECT rect)
+        public static Image CaptureWindowClientArea(IntPtr handle, RECT rect)
         {
             RECT rectW = new RECT();
             GetWindowRect(handle, ref rectW);
@@ -203,7 +186,8 @@ namespace NotToday.Helpers
             clientRect.Right = clientRect.Left + width;
             clientRect.Bottom = clientRect.Top + height;
 
-            return CaptureRectangle(handle, clientRect);
+            var fullWindow = CaptureFullWindow(handle);
+            return CropRegion(fullWindow, clientRect);
         }
 
         /// <summary>
@@ -212,7 +196,7 @@ namespace NotToday.Helpers
         /// <param name="handle"></param>
         /// <param name="rect">屏幕坐标</param>
         /// <returns></returns>
-        public static Image CaptureRectangle(IntPtr handle, RECT rect)
+        public static Image CaptureWindow(IntPtr handle, RECT rect)
         {
             int width = rect.Right - rect.Left;
             int height = rect.Bottom - rect.Top;
@@ -239,6 +223,21 @@ namespace NotToday.Helpers
                 ReleaseDC(IntPtr.Zero, hdcSrc);
             }
         }
+
+        private static Bitmap CropRegion(Bitmap source, RECT rect)
+        {
+            Rectangle region = new Rectangle(rect.Left, rect.Top, rect.Right - rect.Left, rect.Bottom - rect.Top);
+            // 验证区域
+            if (region.Left < 0 || region.Top < 0 ||
+                region.Right > source.Width ||
+                region.Bottom > source.Height)
+            {
+                throw new ArgumentException("区域超出窗口范围");
+            }
+
+            return source.Clone(region, source.PixelFormat);
+        }
+
 
         // 辅助API声明
         [DllImport("user32.dll")]

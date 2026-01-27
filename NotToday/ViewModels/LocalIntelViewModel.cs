@@ -249,7 +249,6 @@ namespace NotToday.ViewModels
         public ICommand StartCommand => new RelayCommand(() =>
         {
             Start(SelectedProcess);
-            Services.LocalIntelScreenshotService.Current.Start();
             Save();
         });
 
@@ -265,7 +264,6 @@ namespace NotToday.ViewModels
                 GetLocalIntelItems(p);
                 Start(p);
             }
-            Services.LocalIntelScreenshotService.Current.Start();
             Save();
         });
 

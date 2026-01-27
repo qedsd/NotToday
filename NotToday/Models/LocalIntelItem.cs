@@ -60,7 +60,7 @@ namespace NotToday.Models
             DecreaseMode = (int)config.DecreaseMode;
         }
         private nint _sourceHwnd;
-        private WindowCapture2.RECT _targetRect;
+        private WindowCapture.RECT _targetRect;
 
         public bool Start()
         {
@@ -77,7 +77,7 @@ namespace NotToday.Models
             try
             {
                 _sourceHwnd = _config.HWnd;
-                _targetRect = new WindowCapture2.RECT()
+                _targetRect = new WindowCapture.RECT()
                 {
                     Left = _config.IntelRect.X,
                     Right = _config.IntelRect.X + _config.IntelRect.Width,
@@ -127,7 +127,7 @@ namespace NotToday.Models
         {
             try
             {
-                var img = WindowCapture2.CaptureWindowClientArea(_sourceHwnd, _targetRect);
+                var img = WindowCapture.CaptureWindowClientArea(_sourceHwnd, _targetRect);
                 ChangeScreenshot(Helpers.ImageHelper.ImageToBitmap(img));
                 img.Dispose();
                 lock (_locker)

@@ -51,7 +51,7 @@ namespace NotToday.Wins
 
         private System.Drawing.Image GetWindowImage()
         {
-            return WindowCapture2.CaptureWindowClientArea(_sourceHWnd);
+            return WindowCapture.CaptureWindowClientArea(_sourceHWnd);
         }
 
         private void UpdateScreenshot_Click(object sender, RoutedEventArgs e)
