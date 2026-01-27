@@ -241,18 +241,22 @@
                                                         <DataGridTemplateColumn Header="名字">
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <TextBox Width="80" Text="{Binding Name, Mode=TwoWay}" />
+                                                                    <TextBlock Width="80" Text="{Binding Name, Mode=TwoWay}" />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
+                                                            <DataGridTemplateColumn.CellEditingTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBox Width="80" Text="{Binding Name, Mode=TwoWay}" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellEditingTemplate>
                                                         </DataGridTemplateColumn>
                                                         <DataGridTemplateColumn Width="120" Header="颜色">
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <Button
+                                                                    <Border
                                                                         Height="24"
                                                                         HorizontalAlignment="Stretch"
-                                                                        Background="{Binding ColorBrush, Mode=OneWay}"
-                                                                        Click="SelectColorButton_Click" />
+                                                                        Background="{Binding ColorBrush, Mode=OneWay}" />
                                                                 </DataTemplate>
                                                             </DataGridTemplateColumn.CellTemplate>
                                                             <DataGridTemplateColumn.CellEditingTemplate>
@@ -264,12 +268,33 @@
                                                         <DataGridTemplateColumn Header="音频文件">
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>
+                                                                    <TextBlock>
+                                                                        <TextBlock.Resources>
+                                                                            <Style TargetType="TextBlock">
+                                                                                <Setter Property="Text" Value="{Binding SoundFile}" />
+                                                                                <Style.Triggers>
+                                                                                    <DataTrigger Binding="{Binding SoundFile}" Value="">
+                                                                                        <Setter Property="Text" Value="默认" />
+                                                                                        <Setter Property="Opacity" Value="0.7" />
+                                                                                    </DataTrigger>
+                                                                                    <DataTrigger Binding="{Binding SoundFile}" Value="{x:Null}">
+                                                                                        <Setter Property="Text" Value="默认" />
+                                                                                        <Setter Property="Opacity" Value="0.7" />
+                                                                                    </DataTrigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </TextBlock.Resources>
+                                                                    </TextBlock>
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                            <DataGridTemplateColumn.CellEditingTemplate>
+                                                                <DataTemplate>
                                                                     <StackPanel Orientation="Horizontal">
                                                                         <TextBox Width="200" Text="{Binding SoundFile, Mode=TwoWay}" />
                                                                         <Button Click="PickSoundFileButton_Click" Content="+" />
                                                                     </StackPanel>
                                                                 </DataTemplate>
-                                                            </DataGridTemplateColumn.CellTemplate>
+                                                            </DataGridTemplateColumn.CellEditingTemplate>
                                                         </DataGridTemplateColumn>
                                                     </DataGrid.Columns>
                                                 </DataGrid>

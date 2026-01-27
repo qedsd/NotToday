@@ -18,48 +18,11 @@ using NotToday.Wins;
 
 namespace NotToday.Views
 {
-    /// <summary>
-    /// LocalIntelPage.xaml 的交互逻辑
-    /// </summary>
     public partial class LocalIntelPage : Page
     {
         public LocalIntelPage()
         {
             InitializeComponent();
-        }
-
-        private void SelectColorButton_Click(object sender, RoutedEventArgs e)
-        {
-            var button = sender as Button;
-            var cell = FindParent<DataGridCell>(button);
-            if (cell != null)
-            {
-                cell.IsEditing = true;
-            }
-            //var color = (sender as Button).DataContext as LocalIntelColor;
-            //if (color != null)
-            //{
-            //    ColorPickerWindow colorPickerWindow = new ColorPickerWindow(Color.FromArgb(color.Color.A, color.Color.R, color.Color.G, color.Color.B));
-            //    if (colorPickerWindow.ShowDialog() == true)
-            //    {
-            //        //color.Color = System.Drawing.Color.FromArgb(colorPickerWindow.SelectedColor.A, colorPickerWindow.SelectedColor.R, colorPickerWindow.SelectedColor.G, colorPickerWindow.SelectedColor.B);
-            //    }
-            //}
-        }
-        public static T FindParent<T>(DependencyObject child) where T : DependencyObject
-        {
-            // 获取父元素
-            DependencyObject parentObject = VisualTreeHelper.GetParent(child);
-
-            // 如果没有父元素，返回null
-            if (parentObject == null) return null;
-
-            // 如果父元素是目标类型，返回
-            if (parentObject is T parent)
-                return parent;
-
-            // 递归查找
-            return FindParent<T>(parentObject);
         }
 
         private TextBox _editingTextBox;
