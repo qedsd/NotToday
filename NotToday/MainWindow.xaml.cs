@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using NotToday.Services;
 
 namespace NotToday
 {
@@ -19,6 +20,12 @@ namespace NotToday
             InitializeComponent();
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
             TitleBar.Title = $"NotToday {version.Major}.{version.Minor} beta 2";
+            Closed += MainWindow_Closed;
+        }
+
+        private void MainWindow_Closed(object sender, EventArgs e)
+        {
+            LocalIntelNotifyService.Current.CloseWindow();
         }
     }
 }

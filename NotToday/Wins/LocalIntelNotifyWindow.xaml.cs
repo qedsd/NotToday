@@ -51,6 +51,12 @@ namespace NotToday.Wins
             _localIntelNotifies.Clear();
         }
 
+        public void CloseWindow()
+        {
+            Closing -= LocalIntelNotifyWindow_Closing;
+            Close();
+        }
+
         private void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if((sender as ListBox).SelectedItem is LocalIntelNotify item)

@@ -333,7 +333,7 @@ namespace NotToday.ViewModels
         {
             if(SelectedLocalIntelItem == sender)
             {
-                Application.Current.Dispatcher.Invoke(() =>
+                Application.Current?.Dispatcher.Invoke(() =>
                 {
                     Img = ImageHelper.ConvertBitmapToWriteableBitmapDirect(img);
                 });
