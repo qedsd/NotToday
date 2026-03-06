@@ -20,7 +20,7 @@ namespace NotToday
         {
             InitializeComponent();
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
-            TitleBar.Title = $"NotToday {version.Major}.{version.Minor} beta 3";
+            TitleBar.Title = $"NotToday {version.Major}.{version.Minor} beta 4";
             Closed += MainWindow_Closed;
             GlobalExceptionHandler.Initialize();
         }
