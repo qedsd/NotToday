@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using NotToday.Helpers;
 using NotToday.Services;
 
 namespace NotToday
@@ -21,6 +22,7 @@ namespace NotToday
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
             TitleBar.Title = $"NotToday {version.Major}.{version.Minor} beta 3";
             Closed += MainWindow_Closed;
+            GlobalExceptionHandler.Initialize();
         }
 
         private void MainWindow_Closed(object sender, EventArgs e)
